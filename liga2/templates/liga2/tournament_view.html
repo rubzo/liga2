@@ -1,0 +1,24 @@
+{% include "liga2/header.html" %}
+
+<h2>{{ tournament.name }}</h2>
+
+<table>
+  <tr>
+    <th> Name </th>
+    <th> Played </th>
+    <th> Wins </th>
+    <th> Drawn </th>
+    <th> Losses </th>
+    <th> Points </th>
+  </tr>
+  {% for player in players %}
+    <tr>
+      <td> {{ player.player.name }} </td>
+      <td> {{ player.matches }} </td>
+      <td> {{ player.wins }} </td>
+      <td> {{ player.draws }} </td>
+      <td> {{ player.losses }} </td>
+      <td> {{ player.points }} </td>
+    </tr>
+  {% endfor %}
+</table>

@@ -14,7 +14,7 @@ class Tournament(models.Model):
 
     win_points = models.IntegerField(default=3)
     draw_points = models.IntegerField(default=2)
-    second_place_points = models.IntegerField(default=1)
+    second_place_points = models.IntegerField(default=0)
     loss_points = models.IntegerField(default=0)
 
     players = models.ManyToManyField(Player)
