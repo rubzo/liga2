@@ -9,6 +9,67 @@ def index(request):
     context = {"tournaments": tournaments}
     return render(request, "liga2/index.html", context)
 
+def _generate_matches(tournament):
+    """
+    At this point, the tournament is setup correctly.
+    Generate all the matches for the tournament.
+    """
+    players = tournament.players.all()
+
+    assert len(players) > tournament.players_per_match
+
+    matches = []
+
+    # Algorithm adapted from:
+    # http://stackoverflow.com/questions/24332311/what-algorithm-can-generate-round-robin-pairings-for-rounds-with-more-than-two
+
+    # m denotes a legal matching of players (by index)
+    m = list(range(0, tournament.players_per_match))
+    # e denotes the last index in the match array
+    e = len(m)-1
+    # i denotes the index into the match array we're currently trying to
+    # increment
+    i = e
+    # p denotes the last player id
+    p = len(players)-1
+
+    while i != -1:
+        # assume if we're here this is a legal matching
+        for _ in range(tournament.individual_matches):
+            matches.append(list(m))
+
+        # Is it time to move i?
+        if (i == e and m[i] == p) or (i != e and m[i] == m[i+1]-1):
+            # Move to the next slot
+            i -= 1
+            if i == -1:
+                break
+            m[i] += 1
+            # Set the following slots to their lowest possible value
+            j = i+1
+            while j <= e:
+                m[j] = m[i] + (j - i)
+                j += 1
+            # Start from the end, and scan until you find an increment-
+            # able index
+            i = e
+            if m[i] != p:
+                continue
+            while m[i] == m[i-1]+1:
+                i -= 1
+                if i == -1:
+                    break
+        # It is not time to move i, just increment the value
+        else:
+            m[i] += 1
+
+    matchups_with_players = []
+    for match in matches:
+        matchups_with_players.append([ players[i] for i in match ])
+
+    return matchups_with_players
+
+
 def _calculate_player_info(tournament, player):
     player_info = {}
 
@@ -65,4 +126,4 @@ def tournament_view(request, tournament_id):
     return render(request, "liga2/tournament_view.html", context)
 
 def tournament_add(request):
-    return HttpResponse("Oh you want to add a tournament?")
+    return render(request, "liga2/tournament_add.html")

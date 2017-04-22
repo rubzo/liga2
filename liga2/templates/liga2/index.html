@@ -1,9 +1,17 @@
 {% include "liga2/header.html" %}
 
-<h2>List of Tournaments</h2>
 
-<ul>
-{% for tour in tournaments %}
-<li><a href="{% url 'tournament_view' tour.id %}">{{ tour.name }}</a></li>
-{% endfor %}
-</ul>
+<div>
+  <h2>List of Tournaments</h2>
+  <ul>
+    {% for t in tournaments %}
+    <li><a href="{% url 'tournament_view' t.id %}">{{ t.name }}</a></li>
+    {% endfor %}
+  </ul>
+</div>
+
+<div>
+  <a href="{% url 'tournament_add' %}">Add New Tournament</a>
+</div>
+
+
