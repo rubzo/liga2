@@ -11,7 +11,20 @@
 </div>
 
 <div>
+  <h2>List of Players</h2>
+  <ul>
+    {% for p in players %}
+    <li><a href="{% url 'player_edit' p.id %}">{{ p.name }}</a></li>
+    {% endfor %}
+  </ul>
+</div>
+
+<div>
   <a href="{% url 'tournament_add' %}">Add New Tournament</a>
+</div>
+
+<div>
+  <a href="{% url 'player_add' %}">Add New Player</a>
 </div>
 
 

@@ -1,0 +1,8 @@
+{% include "liga2/header.html" %}
+
+{% block content %}
+    <form method="POST" class="player-form">{% csrf_token %}
+          {{ form.as_p }}
+					<button type="submit">Save</button>
+    </form>
+{% endblock %}

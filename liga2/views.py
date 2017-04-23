@@ -1,15 +1,20 @@
-from django.shortcuts import render, get_object_or_404
-
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
 
 from .models import Tournament, Match, Player, Participation
+from .forms import TournamentForm, PlayerForm
 
 def index(request):
     tournaments = Tournament.objects.all()
-    context = {"tournaments": tournaments}
+    players = Player.objects.all()
+    context = {
+            "tournaments": tournaments,
+            "players": players,
+            }
     return render(request, "liga2/index.html", context)
 
-def _generate_matches(tournament):
+
+def _generate_matchups(tournament):
     """
     At this point, the tournament is setup correctly.
     Generate all the matches for the tournament.
@@ -73,7 +78,7 @@ def _generate_matches(tournament):
 def _calculate_player_info(tournament, player):
     player_info = {}
 
-    player_matches = Match.objects.filter(players=player).filter(complete=True)
+    player_matches = Match.objects.filter(players=player, tournament=tournament).filter(complete=True)
     win_count = 0
     seconds_count = 0
     draw_count = 0
@@ -110,20 +115,62 @@ def _calculate_player_info(tournament, player):
 
     return player_info
 
+
 def tournament_view(request, tournament_id):
     tournament = get_object_or_404(Tournament, pk=tournament_id)
     player_list = []
 
     for player in tournament.players.all():
         player_info = _calculate_player_info(tournament, player)
-        player_list.append((player_info["points"], player_info))
+        player_list.append(player_info)
 
-    player_list = sorted(player_list)[::-1]
+    match_list = Match.objects.filter(tournament=tournament)
 
     context = {"tournament": tournament,
-            "players": [p for (_,p) in player_list]}
+            "players": player_list,
+            "matches": match_list}
 
     return render(request, "liga2/tournament_view.html", context)
 
+
 def tournament_add(request):
-    return render(request, "liga2/tournament_add.html")
+    if request.method == "POST":
+        form = TournamentForm(request.POST)
+        if form.is_valid():
+            tournament = form.save()
+
+            matchups = _generate_matchups(tournament)
+            for matchup in matchups:
+                match = Match(tournament=tournament)
+                match.save()
+                for player in matchup:
+                    participation = Participation(player=player, match=match)
+                    participation.save()
+
+            return redirect("index")
+    else:
+        form = TournamentForm()
+        return render(request, "liga2/tournament_edit.html", {"form": form})
+
+
+def player_add(request):
+    if request.method == "POST":
+        form = PlayerForm(request.POST)
+        if form.is_valid():
+            player = form.save()
+            return redirect("index")
+    else:
+        form = PlayerForm()
+        return render(request, "liga2/player_edit.html", {"form": form})
+
+
+def player_edit(request, player_id):
+    player = get_object_or_404(Player, pk=player_id)
+    if request.method == "POST":
+        form = PlayerForm(request.POST, instance=player)
+        if form.is_valid():
+            player = form.save()
+            return redirect("index")
+    else:
+        form = PlayerForm(instance=player)
+        return render(request, "liga2/player_edit.html", {"form": form})
