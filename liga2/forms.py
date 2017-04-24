@@ -18,7 +18,8 @@ class TournamentForm(forms.ModelForm):
                 )
 
         widgets = {
-                "name": forms.TextInput(attrs={"autofocus": "autofocus"})
+                "name": forms.TextInput(attrs={"autofocus": ""}),
+                "players": forms.CheckboxSelectMultiple(attrs={"checked": ""})
                 }
 
 class PlayerForm(forms.ModelForm):

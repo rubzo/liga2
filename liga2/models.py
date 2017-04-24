@@ -10,7 +10,7 @@ class Player(models.Model):
 class Tournament(models.Model):
     name = models.CharField(max_length=512)
     players_per_match = models.IntegerField(default=2)
-    individual_matches = models.IntegerField(default=4)
+    individual_matches = models.IntegerField(default=2)
 
     win_points = models.IntegerField(default=3)
     draw_points = models.IntegerField(default=2)
