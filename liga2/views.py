@@ -7,6 +7,8 @@ from django.db import models
 from .models import Tournament, Match, Player, Participation
 from .forms import TournamentForm, PlayerForm
 
+import random
+
 def index(request):
     tournaments = Tournament.objects.all()
     players = Player.objects.all()
@@ -127,11 +129,16 @@ def tournament_view(request, tournament_id):
         player_info = _calculate_player_info(tournament, player)
         player_list.append(player_info)
 
-    match_list = Match.objects.filter(tournament=tournament)
+    upcoming_match_list = list(Match.objects.filter(tournament=tournament, complete=False))
+    random.shuffle(upcoming_match_list)
+    completed_match_list = Match.objects.filter(tournament=tournament, complete=True)
 
-    context = {"tournament": tournament,
+    context = {
+            "tournament": tournament,
             "players": player_list,
-            "matches": match_list}
+            "upcoming_matches": upcoming_match_list,
+            "completed_matches": completed_match_list,
+            }
 
     return render(request, "liga2/tournament_view.html", context)
 
