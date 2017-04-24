@@ -3,6 +3,7 @@ from django.views.generic.edit import DeleteView
 from django.http import HttpResponse, HttpResponseForbidden
 from django.core.urlresolvers import reverse_lazy
 from django.db import models
+from django.utils import timezone
 
 from .models import Tournament, Match, Player, Participation
 from .forms import TournamentForm, PlayerForm
@@ -131,7 +132,7 @@ def tournament_view(request, tournament_id):
 
     upcoming_match_list = list(Match.objects.filter(tournament=tournament, complete=False))
     random.shuffle(upcoming_match_list)
-    completed_match_list = Match.objects.filter(tournament=tournament, complete=True)
+    completed_match_list = Match.objects.filter(tournament=tournament, complete=True).order_by("-date_complete")
 
     context = {
             "tournament": tournament,
@@ -195,6 +196,7 @@ def match_edit(request, match_id):
                 participation.score = int(v)
                 participation.save()
         match.complete = True
+        match.date_complete = timezone.now()
         match.save()
         return redirect("tournament_view", tournament_id=match.tournament.id)
     else:

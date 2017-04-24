@@ -30,6 +30,7 @@ class Match(models.Model):
     players = models.ManyToManyField(Player, through="Participation")
     complete = models.BooleanField(default=False)
     tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE)
+    date_complete = models.DateTimeField(null=True)
 
     def __str__(self):
         done = "(TBD)"
