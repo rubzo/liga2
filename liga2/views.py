@@ -5,6 +5,8 @@ from django.core.urlresolvers import reverse_lazy
 from django.db import models
 from django.utils import timezone
 
+from collections import defaultdict
+
 from .models import Tournament, Match, Player, Participation
 from .forms import TournamentForm, PlayerForm
 
@@ -92,18 +94,19 @@ def _calculate_player_info(tournament, player):
     for match in player_matches:
         participants = Participation.objects.filter(match=match)
 
-        scores = []
-        for p in participants:
-            scores.append((p.score, p.player))
-        scores = sorted(scores)[::-1]
+        scores = defaultdict(list)
 
-        if scores[0][1] == player:
-            if scores[0][0] == scores[1][0]:
-                draw_count += 1
-            else:
-                win_count += 1
-        elif tournament.second_place_points != 0 and scores[1][1] == player:
-            seconds_count += 1
+        for p in participants:
+            scores[p.score].append(p.player)
+
+        u = sorted(scores.keys())[::-1]
+
+        if player in scores[u[0]] and len(scores[u[0]]) == 1:
+            win_count += 1
+        elif player in scores[u[0]]:
+            draw_count += 1
+        elif tournament.second_place_points != 0 and player in scores[u[1]] and len(scores[u[1]]) == 1:
+            secounds_count += 1
         else:
             loss_count += 1
 
