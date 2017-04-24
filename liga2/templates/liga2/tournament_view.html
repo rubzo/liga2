@@ -29,7 +29,7 @@
   <div>
     <ul>
       {% for match in matches %}
-      <li>{{ match }}</li>
+      <li><a href="{% url 'match_edit' match.id %}">{{ match }}</a></li>
       {% endfor %}
     </ul>
   </div>

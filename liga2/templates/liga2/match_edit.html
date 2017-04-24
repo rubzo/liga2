@@ -1,0 +1,12 @@
+{% include "liga2/base.html" %}
+
+{% block content %}
+  <div class="container">
+    <form method="POST" class="match-form">{% csrf_token %}
+      {% for p in participations %}
+      <p>{{ p.player.name }} <input type="text" name="score_{{ p.id }}" required /></p>
+      {% endfor %}
+      <button class="btn btn-info" type="submit">Submit Match</button>
+    </form>
+  </div>
+{% endblock %}

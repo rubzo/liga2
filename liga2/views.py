@@ -178,6 +178,23 @@ def player_edit(request, player_id):
         form = PlayerForm(instance=player)
         return render(request, "liga2/player_edit.html", {"form": form})
 
+def match_edit(request, match_id):
+    match = get_object_or_404(Match, pk=match_id)
+    if request.method == "POST":
+        for (k, v) in request.POST.items():
+            if k.startswith("score_"):
+                participation_id = int(k.replace("score_", ""))
+                participation = Participation.objects.get(id=participation_id)
+                participation.score = int(v)
+                participation.save()
+        match.complete = True
+        match.save()
+        return redirect("tournament_view", tournament_id=match.tournament.id)
+    else:
+        participations = Participation.objects.filter(match=match)
+        return render(request, "liga2/match_edit.html", {"participations": participations})
+
+
 class PlayerDelete(DeleteView):
     model = Player
     success_url = reverse_lazy("index")
