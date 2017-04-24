@@ -1,9 +1,11 @@
-{% include "liga2/header.html" %}
+{% include "liga2/base.html" %}
 
 {% block content %}
-    <h1>New Tournament</h1>
-    <form method="POST" class="tournament-form">{% csrf_token %}
-          {{ form.as_p }}
-					<button type="submit">Save</button>
-    </form>
+<div class="container">
+	<h1>New Tournament</h1>
+	<form method="POST" class="tournament-form">{% csrf_token %}
+		{{ form.as_p }}
+		<button class="btn btn-info" type="submit">Save</button>
+	</form>
+</div>
 {% endblock %}

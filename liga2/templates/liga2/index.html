@@ -1,7 +1,8 @@
-{% include "liga2/header.html" %}
+{% extends "liga2/base.html" %}
 
+{% block content %}
 
-<div>
+<div class="container">
   <h2>List of Tournaments</h2>
   <ul>
     {% for t in tournaments %}
@@ -10,7 +11,7 @@
   </ul>
 </div>
 
-<div>
+<div class="container">
   <h2>List of Players</h2>
   <ul>
     {% for p in players %}
@@ -19,12 +20,12 @@
   </ul>
 </div>
 
-<div>
-  <a href="{% url 'tournament_add' %}">Add New Tournament</a>
+<div class="container">
+  <a href="{% url 'tournament_add' %}" class="btn btn-info" role="button">Add New Tournament</a>
 </div>
 
-<div>
-  <a href="{% url 'player_add' %}">Add New Player</a>
+<div class="container">
+  <a href="{% url 'player_add' %}" class="btn btn-info" role="button">Add New Player</a>
 </div>
 
-
+{% endblock %}
