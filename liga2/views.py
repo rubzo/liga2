@@ -106,7 +106,7 @@ def _calculate_player_info(tournament, player):
         elif player in scores[u[0]]:
             draw_count += 1
         elif tournament.second_place_points != 0 and player in scores[u[1]] and len(scores[u[1]]) == 1:
-            secounds_count += 1
+            seconds_count += 1
         else:
             loss_count += 1
 
@@ -119,6 +119,7 @@ def _calculate_player_info(tournament, player):
     player_info["wins"] = win_count
     player_info["draws"] = draw_count
     player_info["losses"] = loss_count
+    player_info["seconds"] = seconds_count
     player_info["points"] = points
     player_info["player"] = player
 
@@ -132,6 +133,9 @@ def tournament_view(request, tournament_id):
     for player in tournament.players.all():
         player_info = _calculate_player_info(tournament, player)
         player_list.append(player_info)
+
+    player_list.sort(key=lambda p: p["points"])
+    player_list = player_list[::-1]
 
     upcoming_match_list = list(Match.objects.filter(tournament=tournament, complete=False))
     random.shuffle(upcoming_match_list)

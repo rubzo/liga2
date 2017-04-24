@@ -33,10 +33,7 @@ class Match(models.Model):
     date_complete = models.DateTimeField(null=True)
 
     def __str__(self):
-        done = "(TBD)"
-        if self.complete:
-            done = "(DONE)"
-        return "{} {}".format(" vs. ".join([p.name for p in self.players.all()]), done)
+        return " vs. ".join([p.name for p in self.players.all()])
 
 
 class Participation(models.Model):

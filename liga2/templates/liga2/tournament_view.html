@@ -8,21 +8,27 @@
 
     <table class="table">
       <tr>
-        <th> Name </th>
-        <th> Played </th>
-        <th> Wins </th>
-        <th> Drawn </th>
-        <th> Losses </th>
-        <th> Points </th>
+        <th>Name</th>
+        <th>Played</th>
+        <th>Wins</th>
+        {% if tournament.second_place_points > 0 %}
+        <th>(2nds) </th>
+        {% endif %}
+        <th>Drawn</th>
+        <th>Losses</th>
+        <th>Points</th>
       </tr>
       {% for player in players %}
       <tr>
-        <td> {{ player.player.name }} </td>
-        <td> {{ player.matches }} </td>
-        <td> {{ player.wins }} </td>
-        <td> {{ player.draws }} </td>
-        <td> {{ player.losses }} </td>
-        <td> {{ player.points }} </td>
+        <td>{{ player.player.name }}</td>
+        <td>{{ player.matches }}</td>
+        <td>{{ player.wins }}</td>
+        {% if tournament.second_place_points > 0 %}
+        <td>{{ player.seconds }}</td>
+        {% endif %}
+        <td>{{ player.draws }}</td>
+        <td>{{ player.losses }}</td>
+        <td>{{ player.points }}</td>
       </tr>
       {% endfor %}
     </table>
@@ -32,7 +38,7 @@
     <h3>Upcoming Matches ({{ upcoming_matches|length }} left!)</h3>
 
     <ul>
-      {% for match in upcoming_matches %}
+      {% for match in upcoming_matches|slice:"10" %}
       <li><a href="{% url 'match_edit' match.id %}">{{ match }}</a></li>
       {% endfor %}
     </ul>
