@@ -3,21 +3,32 @@
 {% block content %}
 
 <div class="container">
-  <h2>List of Tournaments</h2>
+  <h2>Tournaments</h2>
+  <h4>
   <ul>
     {% for t in tournaments %}
-    <li><a href="{% url 'tournament_view' t.id %}">{{ t.name }}</a></li>
+    <li>
+      <a href="{% url 'tournament_view' t.id %}" class="label label-default">{{ t.name }}</a>
+      <a href="{% url 'tournament_delete' t.id %}" class="btn btn-danger btn-xs" role="button">X</a>
+    </li>
     {% endfor %}
   </ul>
+  </h4>
 </div>
 
 <div class="container">
-  <h2>List of Players</h2>
+  <h2>Players</h2>
+  <h4>
   <ul>
     {% for p in players %}
-    <li><a href="{% url 'player_edit' p.id %}">{{ p.name }}</a></li>
+    <li>
+      <a href="{% url 'player_edit' p.id %}" class="label label-default">{{ p.name }}</a>
+
+      <a href="{% url 'player_delete' p.id %}" class="btn btn-danger btn-xs" role="button">X</a>
+    </li>
     {% endfor %}
   </ul>
+  </h4>
 </div>
 
 <div class="container">

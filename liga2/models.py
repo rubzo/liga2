@@ -36,7 +36,7 @@ class Match(models.Model):
 
 
 class Participation(models.Model):
-    player = models.ForeignKey(Player, on_delete=models.CASCADE)
+    player = models.ForeignKey(Player, on_delete=models.PROTECT)
     match = models.ForeignKey(Match, on_delete=models.CASCADE)
     score = models.IntegerField(default=0)
 

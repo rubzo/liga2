@@ -1,5 +1,8 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import HttpResponse
+from django.views.generic.edit import DeleteView
+from django.http import HttpResponse, HttpResponseForbidden
+from django.core.urlresolvers import reverse_lazy
+from django.db import models
 
 from .models import Tournament, Match, Player, Participation
 from .forms import TournamentForm, PlayerForm
@@ -174,3 +177,20 @@ def player_edit(request, player_id):
     else:
         form = PlayerForm(instance=player)
         return render(request, "liga2/player_edit.html", {"form": form})
+
+class PlayerDelete(DeleteView):
+    model = Player
+    success_url = reverse_lazy("index")
+    template_name = "liga2/object_delete.html"
+
+    def delete(self, request, *args, **kwargs):
+        try:
+            return super(PlayerDelete, self).delete(request, *args, **kwargs)
+        except models.ProtectedError as e:
+            # Return the appropriate response
+            return HttpResponseForbidden("This player is tied to 1 or more games, so cannot be deleted.")
+
+class TournamentDelete(DeleteView):
+    model = Tournament
+    success_url = reverse_lazy("index")
+    template_name = "liga2/object_delete.html"

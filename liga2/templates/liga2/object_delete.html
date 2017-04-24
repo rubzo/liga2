@@ -1,0 +1,14 @@
+{% include "liga2/base.html" %}
+
+{% block content %}
+<div class="container">
+  <form method="POST">{% csrf_token %}
+    <div>
+      Are you sure you want to delete {{ object.name }}?
+    </div>
+    <div>
+      <input type="submit" class="btn btn-danger" value="Yep!" />
+    </div>
+  </form>
+</div>
+{% endblock %}
