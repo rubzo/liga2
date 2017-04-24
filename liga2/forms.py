@@ -17,6 +17,10 @@ class TournamentForm(forms.ModelForm):
                 "players"
                 )
 
+        widgets = {
+                "name": forms.TextInput(attrs={"autofocus": "autofocus"})
+                }
+
 class PlayerForm(forms.ModelForm):
 
     class Meta:
@@ -25,3 +29,6 @@ class PlayerForm(forms.ModelForm):
                 "name",
                 )
 
+        widgets = {
+                "name": forms.TextInput(attrs={"autofocus": "autofocus"})
+                }
