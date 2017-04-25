@@ -1,0 +1,10 @@
+.liga-header {
+  background-color: #258039;
+  color: white;
+}
+.liga-header a {
+  color:white
+}
+.liga-header a:hover {
+  text-decoration: none;
+}
